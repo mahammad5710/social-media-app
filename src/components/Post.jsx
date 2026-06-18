@@ -17,7 +17,7 @@ const Post = ({ post }) => {
           </span>
         </h5>
         <p className="card-text">{post.body}</p>
-        {post.tags.map((tag) => (
+        {post.tags?.map((tag) => (
           <span className="badge text-bg-primary hastag" key={tag}>
             {tag}
           </span>

@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useReducer, createContext } from "react";
 export const PostListItems = createContext({
   postList: [],
@@ -21,16 +22,17 @@ const reducerPostList = (currentpostList, action) => {
 };
 const PostListItemsProvider = ({ children }) => {
   const [postList, dispatchPostList] = useReducer(reducerPostList,[]);
-  const addPost = (userID,title,body,reactions,tags) => {
+  const addPost = (userId,title,body,reactions,tags) => {
+    console.log("add Post called");
     dispatchPostList({
       type:"Add",
       payload:{
-      id:Date.now,
-      title:title,
-      body:body,
-      reactions:reactions,
-      userId:userID,
-      tags:tags
+        id:new Date(),
+        userId:userId,
+        title:title,
+        body:body,
+        reactions:reactions,
+        tags:tags,
       }
     });
   };
@@ -42,14 +44,17 @@ const PostListItemsProvider = ({ children }) => {
       }
     });
   };
-  const deletePost = (id) => {
-    dispatchPostList({
-      type:"Delete",
-      payload:{
-        id
-      }
-    });
-  };
+  const deletePost = useCallback(
+    (id) => {
+      dispatchPostList({
+        type:"Delete",
+        payload:{
+          id,
+        },
+      });
+    },
+    [dispatchPostList]
+  );
   return(
     <PostListItems.Provider
     value={{

@@ -9,13 +9,18 @@ const CreatePost = () => {
   const { addPost }=useContext(PostListItems);
   const handleSubmit=(event)=>{
     event.preventDefault();
-    const userID=userIDElement.current.value;
+    const userId=userIDElement.current.value;
     const title=titleElement.current.value;
     const body=bodyElement.current.value;
     const reactions=reactionsElement.current.value;
     const tags = tagsElement.current.value.trim().split(/\s+/);
-    addPost(userID,title,body,reactions,tags);
-  };
+    userIDElement.current.value="";
+    titleElement.current.value="";
+    bodyElement.current.value="";
+    reactionsElement.current.value="";
+    tagsElement.current.value="";
+    addPost(userId,title,body,reactions,tags);
+  }
   return (
     <form className="create-post" onSubmit={handleSubmit}>
       <div className="mb-3">
