@@ -1,26 +1,43 @@
 import { useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { PostListItems } from "../store/post-list-items";
 const CreatePost = () => {
-  const userIDElement=useRef();
-  const titleElement=useRef();
-  const bodyElement=useRef();
-  const reactionsElement=useRef();
-  const tagsElement=useRef();
-  const { addPost }=useContext(PostListItems);
-  const handleSubmit=(event)=>{
+  const naviagte = useNavigate();
+  const { addPost } = useContext(PostListItems);
+  const userIDElement = useRef();
+  const titleElement = useRef();
+  const bodyElement = useRef();
+  const reactionsElement = useRef();
+  const tagsElement = useRef();
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const userId=userIDElement.current.value;
-    const title=titleElement.current.value;
-    const body=bodyElement.current.value;
-    const reactions=reactionsElement.current.value;
+    const userId = userIDElement.current.value;
+    const title = titleElement.current.value;
+    const body = bodyElement.current.value;
+    const reactions = reactionsElement.current.value;
     const tags = tagsElement.current.value.trim().split(/\s+/);
-    userIDElement.current.value="";
-    titleElement.current.value="";
-    bodyElement.current.value="";
-    reactionsElement.current.value="";
-    tagsElement.current.value="";
-    addPost(userId,title,body,reactions,tags);
-  }
+    userIDElement.current.value = "";
+    titleElement.current.value = "";
+    bodyElement.current.value = "";
+    reactionsElement.current.value = "";
+    tagsElement.current.value = "";
+    fetch("https://dummyjson.com/posts/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: title,
+        body: body,
+        reactions: reactions,
+        userId: userId,
+        tags: tags,
+      }),
+    })
+      .then((res) => res.json())
+      .then((post) => {
+        addPost({ ...post, id: Date.now() });
+        naviagte("/");
+      });
+  };
   return (
     <form className="create-post" onSubmit={handleSubmit}>
       <div className="mb-3">
